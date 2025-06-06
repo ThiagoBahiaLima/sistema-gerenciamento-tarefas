@@ -9,6 +9,8 @@
 
 int main(){
 
+   system("chcp 65001");
+   int verificarLeitura = 0;
    int escolha = 0;
    while(escolha != 6){
       //interface inicial
@@ -19,89 +21,160 @@ int main(){
       printf("4. Excluir tarefa\n");
       printf("5. Salvar lista em um arquivo .txt\n"); 
       printf("6. Sair\n");
-      printf("\nEscolha uma opção: ");
-      //Seleciona uma opção
-      scanf("%d",&escolha);
+      
+      while(verificarLeitura != 1){
+         printf("\nEscolha uma opção: ");
+         verificarLeitura = scanf("%d",&escolha);
+         if(verificarLeitura != 1){
+            printf("Evite caracteres que não sejam números\n");
+            while(getchar() != '\n');
+         }
+      }
+      verificarLeitura = 0;
 
       switch(escolha){
-         case 1: printf("Escolha quantas tarefas quer cadastrar: ");
-            int quantidade = 0;
-            scanf("%d",&quantidade);
-            cadastrarTarefas(quantidade);
-            printf("Tarefas cadastradas com sucesso!\n");
-            system("pause");
-            break;
-         case 2: listarTarefas();
-            system("pause");
-            break;
-         case 3: printf("Escolha quantas tarefas quer editar: ");
-            int quantidade2 = -1;
-            while(quantidade2 < 0){
-               scanf("%d",&quantidade2);
-               if(quantidade2 < 0){
-                  printf("Escolha uma quantidade valida: ");
+         case 1: printf("\n");
+            int quantidade = -1;
+            while(verificarLeitura != 1 || quantidade < 0){
+               printf("Escolha quantas tarefas quer cadastrar: ");
+               verificarLeitura = scanf("%d",&quantidade);
+               if(verificarLeitura != 1){
+                  printf("Evite caracteres que não sejam números\n");
+                  while(getchar() != '\n');
+               }
+               else{
+                  if(quantidade < 0){
+                     printf("Insira um número natural\n");
+                  }
                }
             }
-            if(quantidade2 != 0){
-               int tarefas[quantidade2];
-               if(listarTarefas() != -1){
-                  for(int i = 0;i < quantidade2;i++){
-                     tarefas[i] = 0;
-                     while(tarefas[i] <= 0){
-                        printf("Digite o numero da tarefa que quer editar: ");
-                        scanf("%d",&tarefas[i]);
-                        if(tarefas[i] <= 0){
-                           printf("Insira um valor natural não nulo\n");
-                        }
-                     }
-                  }
-                  ordenarVetor(tarefas,quantidade2);
-                  if(editarTarefas(tarefas,quantidade2) == quantidade2){
-                     printf("Todas as tarefas editadas com sucesso!\n");
+            verificarLeitura = 0;
+            if(quantidade != 0){
+               cadastrarTarefas(quantidade);
+               printf("Tarefas cadastradas com sucesso!\n");
+            }
+            else{
+               printf("Ok, nenhuma tarefa será cadastrada!\n");
+            }
+            system("pause");
+            break;
+         case 2: 
+            if(verificarExistenciaArquivo() == 0){
+               listarTarefas();
+            }
+            system("pause");
+            break;
+         case 3: 
+            if(verificarExistenciaArquivo() == 0){
+               printf("Escolha quantas tarefas quer editar: ");
+               int quantidade2 = -1;
+               while(quantidade2 < 0 || verificarLeitura != 1){
+                  verificarLeitura = scanf("%d",&quantidade2);
+                  if(verificarLeitura != 1){
+                     printf("Evite caracteres que não sejam números\nEscolha uma quantidade válida: ");
+                     while(getchar() != '\n');
                   }
                   else{
-                     printf("Nem toda tarefa pôde ser editada ou algumas tarefas não existem\n");
-                  }
-               }
-            }
-            system("pause");
-            break;
-         case 4: printf("Escolha quantas tarefas quer excluir: ");
-            int quantidade3 = -1;
-            while(quantidade3 < 0){
-               scanf("%d",&quantidade3);
-               if(quantidade3 < 0){
-                  printf("Escolha uma quantidade valida: ");
-               }
-            }
-            if(quantidade3 != 0){
-               if(listarTarefas() != -1){
-                  int tarefas[quantidade3];
-                  for(int i = 0;i < quantidade3;i++){
-                     tarefas[i] = 0;
-                     while(tarefas[i] <= 0){
-                        printf("Digite o número da tarefa que quer excluir: ");
-                        scanf("%d",&tarefas[i]);
-                        if(tarefas[i] <= 0){
-                           printf("Insira um valor natural não nulo\n");
-                        }
+                     if(quantidade2 < 0){
+                        printf("Escolha uma quantidade valida: ");
                      }
                   }
-                  ordenarVetor(tarefas,quantidade3);
-                  if(excluirTarefas(tarefas,quantidade3) == quantidade3){
-                     printf("Tarefas excluídas com sucesso!\n");
+               }
+               verificarLeitura = 0;
+               if(quantidade2 != 0){
+                  int tarefas[quantidade2];
+                  if(listarTarefas() != -1){
+                     for(int i = 0;i < quantidade2;i++){
+                        tarefas[i] = 0;
+                        while(tarefas[i] <= 0 || verificarLeitura != 1){
+                           printf("Digite o numero da tarefa que quer editar: ");
+                           verificarLeitura = scanf("%d",&tarefas[i]);
+                           if(verificarLeitura != 1){
+                              printf("Evite caracteres que não sejam números\n");
+                              while(getchar() != '\n');
+                           }
+                           else{
+                              if(tarefas[i] <= 0){
+                                 printf("Insira um valor natural não nulo\n");
+                              }
+                           }
+                        }
+                        verificarLeitura = 0;
+                     }
+                     ordenarVetor(tarefas,quantidade2);
+                     if(editarTarefas(tarefas,quantidade2) == quantidade2){
+                        printf("Todas as tarefas editadas com sucesso!\n");
+                     }
+                     else{
+                        printf("Nem toda tarefa pôde ser editada ou algumas tarefas não existem\n");
+                     }
                   }
-                  else{
-                     printf("Nem toda tarefa pôde ser excluída ou algumas tarefas não existem\n");
-                  }
+               }
+               else{
+                  printf("Ok, nenhuma tarefa será editada!\n");
                }
             }
             system("pause");
             break;
-         case 5:salvarArquivo();
+         case 4: 
+            if(verificarExistenciaArquivo() == 0){
+               printf("Escolha quantas tarefas quer excluir: ");
+               int quantidade3 = -1;
+               while(quantidade3 < 0 || verificarLeitura != 1){
+                  verificarLeitura = scanf("%d",&quantidade3);
+                  if(verificarLeitura != 1){
+                     printf("Evite caracteres que não sejam números\nEscolha uma quantidade válida: ");
+                     while(getchar() != '\n');
+                  }
+                  else{
+                     if(quantidade3 < 0){
+                        printf("Escolha uma quantidade valida: ");
+                     }
+                  }
+               }
+               verificarLeitura = 0;
+               if(quantidade3 != 0){
+                  if(listarTarefas() != -1){
+                     int tarefas[quantidade3];
+                     for(int i = 0;i < quantidade3;i++){
+                        tarefas[i] = 0;
+                        while(tarefas[i] <= 0 || verificarLeitura != 1){
+                           printf("Digite o número da tarefa que quer excluir: ");
+                           verificarLeitura = scanf("%d",&tarefas[i]);
+                           if(verificarLeitura != 1){
+                              printf("Evite caracteres que não sejam números\n");
+                              while(getchar() != '\n');
+                           }
+                           else{
+                              if(tarefas[i] <= 0){
+                                 printf("Insira um valor natural não nulo\n");
+                              }
+                           }
+                        }
+                        verificarLeitura = 0;
+                     }
+                     ordenarVetor(tarefas,quantidade3);
+                     if(excluirTarefas(tarefas,quantidade3) == quantidade3){
+                        printf("Tarefas excluídas com sucesso!\n");
+                     }
+                     else{
+                        printf("Nem toda tarefa pôde ser excluída ou algumas tarefas não existem\n");
+                     }
+                  }
+               }
+               else{
+                  printf("Ok, nenhuma tarefa será excluída!\n");
+               }
+            }
+            system("pause");
+            break;
+         case 5:
+            if(verificarExistenciaArquivo() == 0){
+               salvarArquivo();
+            }
             break;
          case 6:printf("Encerrando programa...\n");
-            Sleep(3000);
+            Sleep(1000);
             break;
          default:printf("Escolha inválida\n");
             break;

@@ -7,6 +7,25 @@
 #include "MPT.h"
 #include "MPV.h"
 
+int verificarExistenciaArquivo(){
+   FILE *arq = NULL;
+
+   arq = fopen("Lista de tarefas.txt","r");
+   
+   char linha[301];
+
+   if(arq == NULL){
+      printf("Erro: A lista de tarefas não existe ainda.\n");
+      return -1;
+   }
+   if(fgets(linha,sizeof(linha),arq) == NULL){
+      printf("Erro: A lista está vazia.\n");
+      return -1;
+   }
+   fclose(arq);
+   return 0;
+}
+
 int escolherDiretorio(char *caminho,int tamanho){
    BROWSEINFO bi = { 0 };
    LPITEMIDLIST pidl;
@@ -67,8 +86,8 @@ int salvarArquivo(){
 }
 
 int excluirTarefas(int *tarefas,int tamanho){
-   FILE *arq;
-   FILE *clonearq;
+   FILE *arq = NULL;
+   FILE *clonearq = NULL;
    
    arq = fopen("Lista de tarefas.txt","r");
    clonearq = fopen("clone.txt","w");
@@ -102,8 +121,8 @@ int excluirTarefas(int *tarefas,int tamanho){
 
 int editarTarefas(int *tarefas,int tamanho){
    //Ponteiro para o arquivo
-   FILE *arq;
-   FILE *clonearq;
+   FILE *arq = NULL;
+   FILE *clonearq = NULL;
    //Abrir o arquivo
    arq = fopen("Lista de tarefas.txt","r");
    clonearq = fopen("clone.txt","w");
@@ -148,7 +167,7 @@ int editarTarefas(int *tarefas,int tamanho){
 
 int listarTarefas(){
    //Ponteiro para o arquivo
-   FILE *arq;
+   FILE *arq = NULL;
    //Abrir o arquivo
    arq = fopen("Lista de tarefas.txt","r");
    //Verificar se arquivo foi aberto com êxito
@@ -166,7 +185,7 @@ int listarTarefas(){
 
 int cadastrarTarefas(int quantidadeTarefas){
    //Ponteiro para o arquivo
-   FILE *arq;
+   FILE *arq = NULL;
    //Abrir o arquivo
    arq = fopen("Lista de tarefas.txt","a");
    //Verificar se arquivo foi aberto com êxito

@@ -9,9 +9,11 @@ Ao final do uso do programa vc ainda será capaz de salvar a lista de tarefas cr
 
 Sobre as funcionalidades:
   A opção de cadastrar tarefas não aceita tarefas sem nenhum caracter.
-  A função de as funcionalidades 2 a 4 só serão executadas do início ao fim se tarefas já tiverem sido cadastradas, ou seja, se o arquivo existir.
+  As funcionalidades 2 a 4 só serão executadas do início ao fim se tarefas já tiverem sido cadastradas, ou seja, se o arquivo existir e não estiver vazio.
   Tanto a opção de editar tarefas quanto a opção de excluir tarefas somente aceita quantidades positivas ou nulas de tarefas a serem editadas ou excluídas.
   A tarefa só poderá ser editada se existir.
   A tarefa só pode ser excluída se existir.
   A opção de salvar o arquivo te permite escolher o diretório.
-  Ao escolher a opção de sair o programa se encerará após 3 segundos.
+  Ao escolher a opção de sair o programa se encerará após 1 segundo.
+
+Somente serão aceitos caracteres que não sejam números no cadastro e edição de tarefas. Quaisquer outros inputs que o programa exigir serão aceitos exclusivamente se forem números. 
