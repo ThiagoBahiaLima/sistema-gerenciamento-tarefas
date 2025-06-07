@@ -26,10 +26,10 @@ int main(){
       //interface inicial
       mudarCor(11);
       printf("=== Sistema de Gerenciamento de Tarefas ===\n");
-      printf("1. Cadastrar tarefa\n");
+      printf("1. Cadastrar tarefas\n");
       printf("2. Listar tarefas\n");
-      printf("3. Editar tarefa\n");
-      printf("4. Excluir tarefa\n");
+      printf("3. Editar tarefas\n");
+      printf("4. Excluir tarefas\n");
       printf("5. Salvar lista em um arquivo .txt\n"); 
       printf("6. Sair\n");
       mudarCor(7);

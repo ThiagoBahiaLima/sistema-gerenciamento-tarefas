@@ -5,6 +5,10 @@
 #include "MPE.h"
 
 void mudarCor(int cor){
+
+    //Ponteiro para o console
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    //Altera a cor do texto do console
     SetConsoleTextAttribute(hConsole, cor);
 }
