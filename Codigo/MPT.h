@@ -1,12 +1,13 @@
 #ifndef MPT_H
 #define MPT_H
 
+int contarTarefas();
 int verificarExistenciaArquivo();
 int escolherDiretorio(char *caminho,int tamanho);
 int salvarArquivo();
-int excluirTarefas(int *tarefas,int tamanho);
-int editarTarefas(int *tarefas,int tamanho);
+int excluirTarefas(int tarefa);
+int editarTarefas(int tarefa);
 int listarTarefas();
-int cadastrarTarefas(int quantidadeTarefas);
+int cadastrarTarefas();
 
 #endif

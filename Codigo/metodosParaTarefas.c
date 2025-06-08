@@ -5,8 +5,28 @@
 #include <ctype.h>
 #include <shlobj.h>
 #include "MPT.h"
-#include "MPV.h"
 #include "MPE.h"
+
+int contarTarefas(){
+
+   FILE *arq;
+   arq = fopen("Lista de tarefas.txt","r");
+
+   if(arq == NULL){
+      return -1;
+   }
+
+   int contarTarefas = 0;
+   char linha[300];
+   while(fgets(linha,sizeof(linha),arq) != NULL){
+      contarTarefas++;
+   }
+
+   fclose(arq);
+
+   return contarTarefas;
+
+}
 
 //Função para verificar se a lista de tarefas original já foi criada e se está vazia
 int verificarExistenciaArquivo(){
@@ -31,7 +51,7 @@ int verificarExistenciaArquivo(){
 
    //Verifica se o arquivo está vazio
    if(fgets(linha,sizeof(linha),arq) == NULL){
-      mudarCor(7);
+      mudarCor(4);
       printf("Erro: A lista está vazia.\n");
       mudarCor(7);
 
@@ -167,7 +187,7 @@ int salvarArquivo(){
 }
 
 //Função para deletar linhas do arquivo original
-int excluirTarefas(int *tarefas,int tamanho){
+int excluirTarefas(int tarefa){
 
    //Ponteiro para o arquivo original
    FILE *arq = NULL;
@@ -196,26 +216,14 @@ int excluirTarefas(int *tarefas,int tamanho){
    //Vetor Para armazenar a linha que está sendo clonada
    char linha[100];
 
-   //Indice para saber qual tarefa é a próxima a ser excluída
-   int indice = 0;
-
-   //Conta quantos itens foram excluídos
-   int excluidos = 0;
-
    //Loop para deletar linhas que para quando o arquivo original acaba
    //Variável "conferirLinha" para saber se o loop já chegou na linha que deve ser excluída
    for(int conferirTarefa = 1;fgets(linha,sizeof(linha),arq) != NULL;conferirTarefa++){
 
       //Copia a linha do arquivo original no clone se a linha for diferente da linha que deve ser deletada e ignora caso a linha 
       //caso ela deva ser deletada
-      if(indice == tamanho || conferirTarefa != tarefas[indice]){
+      if(conferirTarefa != tarefa){
          fprintf(clonearq,linha);
-      }
-      else{
-         excluidos++;
-
-         //Muda a tarefa que deve ser excluída
-         indice++;
       }
    }
 
@@ -229,11 +237,14 @@ int excluirTarefas(int *tarefas,int tamanho){
    //Renomeia clone com as alterações da lista original para o nome da lista original
    rename("clone.txt","Lista de tarefas.txt");
 
-   //Retorna quantos itens foram excluídos para conferir se tudo que foi escolhido para deletar foi deletado
-   return excluidos;
+   mudarCor(10);
+   printf("Tarefa excluída com sucesso!\n");
+   mudarCor(7);
+
+   return 0;
 }
 
-int editarTarefas(int *tarefas,int tamanho){
+int editarTarefas(int tarefa){
    //Ponteiro para o arquivo original
    FILE *arq = NULL;
 
@@ -257,12 +268,6 @@ int editarTarefas(int *tarefas,int tamanho){
       return -1;
    }
 
-   //Indice para saber qual tarefa é a próxima a ser excluída
-   int indice = 0;
-
-   //Conta quantos itens foram editados
-   int editados = 0;
-
    //Armazena a linha que está sendo clonada ou editada
    char linha[100];
 
@@ -271,7 +276,7 @@ int editarTarefas(int *tarefas,int tamanho){
    for(int conferirLinha = 1;fgets(linha,sizeof(linha),arq) != NULL;conferirLinha++){
 
       //Confere se a linha deve ser clonada ou editada
-      if(indice == tamanho || conferirLinha != tarefas[indice]){
+      if(conferirLinha != tarefa){
          fprintf(clonearq,linha);
       }
       else{
@@ -281,7 +286,7 @@ int editarTarefas(int *tarefas,int tamanho){
 
          //Garante que o usuário não insira uma linha em branco no arquivo
          while(isspace(linha[0])){
-            printf("Digite como quer editar a tarefa %d: ",tarefas[indice]);
+            printf("Digite como quer editar a tarefa: ");
 
             //Limpa o buffer do teclado
             fflush(stdin);
@@ -290,12 +295,8 @@ int editarTarefas(int *tarefas,int tamanho){
             fgets(linha,sizeof(linha),stdin);
 
             if(!isspace(linha[0])){
+
                fprintf(clonearq,linha);
-
-               //Muda a terefa que deve ser editada
-               editados++;
-
-               indice++;
             }
             else{
                //Mensagem de erro caso o usuário digite uma linha em branco
@@ -317,8 +318,11 @@ int editarTarefas(int *tarefas,int tamanho){
    //Renomeia o clone com as alterações da lista original para o nome da lista original
    rename("clone.txt","Lista de tarefas.txt");
 
-   //Retorna qunatos itens foram editados para conferir se todos os itens que deveriam ser editados foram editados
-   return editados;
+   mudarCor(10);
+   printf("Tarefa editada com sucesso!\n");
+   mudarCor(7);
+
+   return 0;
 }
 
 int listarTarefas(){
@@ -348,7 +352,7 @@ int listarTarefas(){
    return 0;
 }
 
-int cadastrarTarefas(int quantidadeTarefas){
+int cadastrarTarefas(){
    //Ponteiro para o arquivo
    FILE *arq = NULL;
    //Abrir o arquivo
@@ -366,12 +370,9 @@ int cadastrarTarefas(int quantidadeTarefas){
 
    //Variável que armazena a capacidade de memória da string, inicializada em zero para se adaptar ao tamnho da string digitada
    size_t capacidade = 0;
-
-   //Conta quantas tarefas foram cadastradas
-   int contar = 0;
    
-   while(contar < quantidadeTarefas){
-      printf("Digite uma tarefa: ");
+   while(tarefa == NULL || isspace(tarefa[0])){
+      printf("Escreva uma tarefa: ");
 
       //limpa o buffer do teclado
       fflush(stdin);
@@ -384,7 +385,7 @@ int cadastrarTarefas(int quantidadeTarefas){
 
          //Copia o input para o arquivo original
          fprintf(arq,tarefa);
-         contar++;
+         
       }
       else{
          mudarCor(4);
@@ -395,6 +396,6 @@ int cadastrarTarefas(int quantidadeTarefas){
    //Fecha o arquivo
    fclose(arq);
    
-   return contar;
+   return 0;
    
 }
