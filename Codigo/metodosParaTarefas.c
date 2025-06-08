@@ -93,7 +93,7 @@ int escolherDiretorio(char *caminho,int tamanho){
       //Converte o id do diretório para um caminho legível
       if(SHGetPathFromIDList(pidl,buffer)) {
 
-         //Copia o caminho selecionado para o parÂmetro "caminho"
+         //Copia o caminho selecionado para o parâmetro "caminho"
          strncpy(caminho,buffer,tamanho);
 
          //Garante que a string termina com /0

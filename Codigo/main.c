@@ -131,6 +131,7 @@ int main(){
 
                   //Variável para saber qual tarefa será alterada
                   int tarefa = 0;
+
                   printf("Tarefas atuais:\n");
                   listarTarefas();
                   printf("Escolha qual tarefa quer editar: ");
@@ -194,16 +195,18 @@ int main(){
 
             //Verifica se a lista de tarefas já foi criada e se não está vazia
             if(verificarExistenciaArquivo() == 0){
+               
                //Variável para verificar se o usuário quer continuar a execução da escolha
                int CONTINUAR = 1;
 
                //Variável para saber quantas tarefas existem
                int tarefas = contarTarefas();
                
-               while(CONTINUAR == 1){
+               while(CONTINUAR == 1 && tarefas != 0){
 
                   //Variável para saber qual tarefa será alterada
                   int tarefa = 0;
+
                   printf("Tarefas atuais:\n");
                   listarTarefas();
                   printf("Escolha qual tarefa quer excluir: ");
@@ -231,31 +234,42 @@ int main(){
                   }
                   verificarLeitura = 0;
                   excluirTarefas(tarefa);
+
+                  //Atualizar quantas tarefas existem após exclusão
+                  tarefas = contarTarefas();
+
                   printf("\n");
-                  printf("Deseja excluir mais tarefas? (1 = sim/0 = não)\n");
-                  while(verificarLeitura != 1 || CONTINUAR != 1 && CONTINUAR != 0){
-                  
-                     //Verificador de leitura recebe o valor deixado pelo scanf após uma leitura bem-sucedida ou falha
-                     verificarLeitura = scanf("%d",&CONTINUAR);
+                  if(tarefas != 0){
+                     printf("Deseja excluir mais tarefas? (1 = sim/0 = não)\n");
+                     while(verificarLeitura != 1 || CONTINUAR != 1 && CONTINUAR != 0){
                      
-                     //verificar se foi digitado um inteiro ao fazer uma escolha 
-                     if(verificarLeitura != 1){
-                        mudarCor(4);
-                        printf("Evite caracteres que não sejam números\nFaça uma escolha válida: ");
-                        mudarCor(7);
+                        //Verificador de leitura recebe o valor deixado pelo scanf após uma leitura bem-sucedida ou falha
+                        verificarLeitura = scanf("%d",&CONTINUAR);
                         
-                        //consumir quaisquer possíveis letras digitadas no lugar da escolha
-                        while(getchar() != '\n');
-                     }
-                     else{
-                        if(CONTINUAR != 1 && CONTINUAR != 0){
+                        //verificar se foi digitado um inteiro ao fazer uma escolha 
+                        if(verificarLeitura != 1){
                            mudarCor(4);
-                           printf("Faça uma escolha válida: ");
+                           printf("Evite caracteres que não sejam números\nFaça uma escolha válida: ");
                            mudarCor(7);
+                           
+                           //consumir quaisquer possíveis letras digitadas no lugar da escolha
+                           while(getchar() != '\n');
+                        }
+                        else{
+                           if(CONTINUAR != 1 && CONTINUAR != 0){
+                              mudarCor(4);
+                              printf("Faça uma escolha válida: ");
+                              mudarCor(7);
+                           }
                         }
                      }
                   }
                   verificarLeitura = 0;
+               }
+               if(tarefas == 0){
+                  mudarCor(14);
+                  printf("Não há mais tarefas na lista\n");
+                  mudarCor(7);
                }
             }
 
