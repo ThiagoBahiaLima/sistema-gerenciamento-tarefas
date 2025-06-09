@@ -174,9 +174,32 @@ int salvarArquivo(){
       //Copia linha por linha do arquivo original no arquivo criado no diretório selecionado
       char linha[256];
       int ordemTarefas = 1;
+      int contar = 1;
+      char rotulo[20];
+
+      strcpy(rotulo,"Título: ");
+
       while (fgets(linha, sizeof(linha), origem)) {
-         fprintf(destino,"Tarefa %d: %s",ordemTarefas,linha);
-         ordemTarefas++;
+         if(contar == 1){
+            fprintf(destino,"===== Tarefa %d =====\n",ordemTarefas);
+         }
+         fprintf(destino,"%s%s",rotulo,linha);
+         if(contar == 1){
+            strcpy(rotulo,"Descrição: ");
+         }
+         if(contar == 2){
+            strcpy(rotulo,"Prioridade: ");
+         }
+         if(contar == 3){
+            strcpy(rotulo,"Status: ");
+         }
+         if(contar == 4){
+            strcpy(rotulo,"Título: ");
+            ordemTarefas++;
+            contar = 0;
+            fprintf(destino,"\n");
+         }
+         contar++;
       }
 
       //Fecha os arquivos
@@ -226,14 +249,24 @@ int excluirTarefas(int tarefa){
    //Vetor Para armazenar a linha que está sendo clonada
    char linha[100];
 
+   tarefa = (tarefa - 1)*4 + 1;
+
+   int deletar = 0;
+
    //Loop para deletar linhas que para quando o arquivo original acaba
    //Variável "conferirLinha" para saber se o loop já chegou na linha que deve ser excluída
    for(int conferirTarefa = 1;fgets(linha,sizeof(linha),arq) != NULL;conferirTarefa++){
 
       //Copia a linha do arquivo original no clone se a linha for diferente da linha que deve ser deletada e ignora caso a linha 
       //caso ela deva ser deletada
-      if(conferirTarefa != tarefa){
+      if(conferirTarefa != tarefa + deletar){
          fprintf(clonearq,linha);
+      }
+      else{
+         deletar++;
+         if(deletar == 4){
+            deletar = 0;
+         }
       }
    }
 
@@ -281,6 +314,14 @@ int editarTarefas(int tarefa){
    //Armazena a linha que está sendo clonada ou editada
    char linha[100];
 
+   int trocar = 1;
+
+   char instrucao[50];
+
+   tarefa = (tarefa - 1)*4 + 1;
+
+   strcpy(instrucao,"Digite a nova tarefa: ");
+
    //Loop para deletar linhas que para quando o arquivo original acaba
    //Variável "conferirLinha" para saber se o loop já chegou na linha que deve ser editada
    for(int conferirLinha = 1;fgets(linha,sizeof(linha),arq) != NULL;conferirLinha++){
@@ -296,7 +337,7 @@ int editarTarefas(int tarefa){
 
          //Garante que o usuário não insira uma linha em branco no arquivo
          while(estaVazia(linha)){
-            printf("Digite a nova tarefa: ");
+            printf(instrucao);
 
             //Limpa o buffer do teclado
             fflush(stdin);
@@ -314,6 +355,23 @@ int editarTarefas(int tarefa){
                printf("A edição deve conter caracteres\n");
                mudarCor(7);
             }
+         }
+
+         switch(trocar){
+            case 1: strcpy(instrucao,"Digite a nova descrição: ");
+               trocar++;
+               tarefa++;
+               break;
+            case 2: strcpy(instrucao,"Digite a nova prioridade: ");
+               trocar++;
+               tarefa++;
+               break;
+            case 3: strcpy(instrucao,"Digite o novo status: ");
+               tarefa++;
+               trocar++;
+               break;
+            default: break;
+
          }
       }
    }
@@ -351,9 +409,33 @@ int listarTarefas(){
    //Vetor para armazenar a linha do arquivo
    char linha[100];
 
+   int ordem = 1;
+
+   char rotulo[15];
+
+   strcpy(rotulo,"Título: ");
+
    //Loop para mostrar linha a linha do arquivo com numeração
    for(int i = 1;fgets(linha,sizeof(linha),arq) != NULL;i++){
-      printf("%d. %s",i,linha);
+      if(i == 1){
+         printf("===== Tarefa %d =====\n",ordem);
+      }
+      printf("%s%s",rotulo,linha);
+      if(i == 1){
+         strcpy(rotulo,"Descrição: ");
+      }
+      if(i == 2){
+         strcpy(rotulo,"Prioridade: ");
+      }
+      if(i == 3){
+         strcpy(rotulo,"Status: ");
+      }
+      if(i == 4){
+         ordem++;
+         i = 0;
+         strcpy(rotulo,"Título: ");
+         printf("\n");
+      }
    }
 
    //Fecha o arquivo
@@ -380,9 +462,9 @@ int cadastrarTarefas(){
 
    //Variável que armazena a capacidade de memória da string, inicializada em zero para se adaptar ao tamnho da string digitada
    size_t capacidade = 0;
-   
+
    while(tarefa == NULL || estaVazia(tarefa)){
-      printf("Escreva uma tarefa: ");
+      printf("Escreva um título: ");
 
       //limpa o buffer do teclado
       fflush(stdin);
@@ -400,6 +482,81 @@ int cadastrarTarefas(){
       else{
          mudarCor(4);
          printf("A tarefa deve conter caracteres\n");
+         mudarCor(7);
+      }
+   }
+
+   tarefa = NULL;
+
+   while(tarefa == NULL || estaVazia(tarefa)){
+      printf("Escreva uma descrição: ");
+
+      //limpa o buffer do teclado
+      fflush(stdin);
+
+      //Lê o input do usuário e armazena na variável "tarefa"
+      getline(&tarefa,&capacidade,stdin);
+
+      //Verifica se tem algo escrito no input
+      if(!estaVazia(tarefa)){
+
+         //Copia o input para o arquivo original
+         fprintf(arq,tarefa);
+         
+      }
+      else{
+         mudarCor(4);
+         printf("A descrição deve conter caracteres\n");
+         mudarCor(7);
+      }
+   }
+
+   tarefa = NULL;
+
+   while(tarefa == NULL || estaVazia(tarefa)){
+      printf("Escreva a prioridade: ");
+
+      //limpa o buffer do teclado
+      fflush(stdin);
+
+      //Lê o input do usuário e armazena na variável "tarefa"
+      getline(&tarefa,&capacidade,stdin);
+
+      //Verifica se tem algo escrito no input
+      if(!estaVazia(tarefa)){
+
+         //Copia o input para o arquivo original
+         fprintf(arq,tarefa);
+         
+      }
+      else{
+         mudarCor(4);
+         printf("A prioridade deve conter caracteres\n");
+         mudarCor(7);
+      }
+   }
+
+   tarefa = NULL;
+
+   while(tarefa == NULL || estaVazia(tarefa)){
+      printf("Escreva o status: ");
+
+      //limpa o buffer do teclado
+      fflush(stdin);
+
+      //Lê o input do usuário e armazena na variável "tarefa"
+      getline(&tarefa,&capacidade,stdin);
+
+      //Verifica se tem algo escrito no input
+      if(!estaVazia(tarefa)){
+
+         //Copia o input para o arquivo original
+         fprintf(arq,tarefa);
+         
+      }
+      else{
+         mudarCor(4);
+         printf("O status deve conter caracteres\n");
          mudarCor(7);
       }
    }
