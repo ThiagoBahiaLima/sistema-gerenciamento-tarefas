@@ -6,6 +6,7 @@
 #include <shlobj.h>
 #include "MPT.h"
 #include "MPE.h"
+#include "MPS.h"
 
 int contarTarefas(){
 
@@ -120,9 +121,18 @@ int salvarArquivo(){
 
       //Escolha do nome do arquivo
       char nomeArquivo[100];
-      fflush(stdin);
-      printf("Escolha um nome para o arquivo (Sem a extensão): ");
-      fgets(nomeArquivo, sizeof(nomeArquivo), stdin);
+      strcpy(nomeArquivo," ");
+      
+      while(estaVazia(nomeArquivo)){
+         fflush(stdin);
+         printf("Escolha um nome para o arquivo (Sem a extensão): ");
+         fgets(nomeArquivo, sizeof(nomeArquivo), stdin);
+         if(estaVazia(nomeArquivo)){
+            mudarCor(4);
+            printf("O nome deve conter caracteres\n");
+            mudarCor(7);
+         }
+      }
 
       //Retirar a quebra de linha do final no nome escolhido e adicionar um \0 no lugar 
       nomeArquivo[strcspn(nomeArquivo, "\n")] = '\0';
@@ -285,8 +295,8 @@ int editarTarefas(int tarefa){
          strcpy(linha," ");
 
          //Garante que o usuário não insira uma linha em branco no arquivo
-         while(isspace(linha[0])){
-            printf("Digite como quer editar a tarefa: ");
+         while(estaVazia(linha)){
+            printf("Digite a nova tarefa: ");
 
             //Limpa o buffer do teclado
             fflush(stdin);
@@ -294,7 +304,7 @@ int editarTarefas(int tarefa){
             //Lê a edição que deve ser feita
             fgets(linha,sizeof(linha),stdin);
 
-            if(!isspace(linha[0])){
+            if(!estaVazia(linha)){
 
                fprintf(clonearq,linha);
             }
@@ -371,7 +381,7 @@ int cadastrarTarefas(){
    //Variável que armazena a capacidade de memória da string, inicializada em zero para se adaptar ao tamnho da string digitada
    size_t capacidade = 0;
    
-   while(tarefa == NULL || isspace(tarefa[0])){
+   while(tarefa == NULL || estaVazia(tarefa)){
       printf("Escreva uma tarefa: ");
 
       //limpa o buffer do teclado
@@ -381,7 +391,7 @@ int cadastrarTarefas(){
       getline(&tarefa,&capacidade,stdin);
 
       //Verifica se tem algo escrito no input
-      if(!isspace(tarefa[0])){
+      if(!estaVazia(tarefa)){
 
          //Copia o input para o arquivo original
          fprintf(arq,tarefa);

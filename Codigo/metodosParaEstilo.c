@@ -2,6 +2,7 @@
 #include <windows.h>
 #include "MPT.h"
 #include "MPE.h"
+#include "MPS.h"
 
 void mudarCor(int cor){
 

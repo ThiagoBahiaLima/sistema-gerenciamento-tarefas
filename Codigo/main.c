@@ -6,10 +6,11 @@
 #include <shlobj.h>
 #include "MPT.h"
 #include "MPE.h"
+#include "MPS.h"
 
 int main(){
 
-   //Comando para aceitar acentos e o caracter "ç"
+   //Comando para aceitar acentos e o caractere "ç"
    system("chcp 65001");
    system("cls");
 
@@ -73,8 +74,6 @@ int main(){
                printf("Tarefas cadastradas até agora:\n");
                listarTarefas();
 
-               Sleep(1750);
-
                printf("\nDeseja cadastrar mais tarefas? (1 = sim/0 = não)\n");
                while(verificarLeitura != 1 || continuar != 1 && continuar != 0){
                
@@ -104,7 +103,7 @@ int main(){
 
             printf("Cadastro de tarefas encerrado...\n");
 
-            Sleep(1750);
+            Sleep(1000);
             break;
          case 2: 
 
@@ -115,7 +114,7 @@ int main(){
                listarTarefas();
             }
 
-            Sleep(1750);
+            Sleep(1000);
             break;
          case 3: 
 
@@ -189,7 +188,7 @@ int main(){
 
             printf("Encerrando edição de tarefas...\n");
 
-            Sleep(1750);
+            Sleep(1000);
             break;
          case 4: 
 
@@ -275,7 +274,7 @@ int main(){
 
             printf("Encerrando exclusão de tarefas...\n");
             
-            Sleep(1750);
+            Sleep(1000);
             break;
          case 5:
 
@@ -296,7 +295,7 @@ int main(){
             printf("Escolha inválida\n");
             mudarCor(7);
 
-            Sleep(1750);
+            Sleep(1000);
             break;
       }
    }
